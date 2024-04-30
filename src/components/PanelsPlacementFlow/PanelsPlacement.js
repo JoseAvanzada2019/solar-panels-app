@@ -81,7 +81,7 @@ function PanelsPlacement() {
       {error && <p>Error: {error}</p>}
       {data && (
         <div>
-          <p>Total Solar Panels: {data.total_solar_panels}</p>
+          <p>Total Solar Panels: {data.total_panels}</p>
         </div>
       )}
     </div>
