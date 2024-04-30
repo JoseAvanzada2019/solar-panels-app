@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import InputsComponent from './InputsComponent';
 
-function CuttingStock() {
+function PanelsPlacement() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [bigRectangle, setBigRectangle] = useState({
-    width: 800,
-    height: 100
+  const [roof, setRoof] = useState({
+    width: 200,
+    height: 500
   }) 
+  const [solarPanel, setSolarPanel] = useState({
+    width: 5,
+    height: 30
+  });
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await axios.post('http://localhost:8000/panels-placement/', {
-        big_rectangle: { width: bigRectangle.width, height: bigRectangle.height},
-        small_rectangle: { width: 300, height: 25 }
+        roof: { width: roof.width, height: roof.height},
+        solar_panel: { width: solarPanel.width, height: solarPanel.height },
+        type: "rectangular"
       });
       setData(response.data);
       setLoading(false);
@@ -28,47 +34,58 @@ function CuttingStock() {
   const renderRectangles = () => {
     if (!data) return null;
 
-    const bigRectangleStyle = {
+    const roofStyle = {
       fill: 'none',
       stroke: 'black',
       strokeWidth: 1,
     };
 
-    const smallRectangleStyle = {
-      fill: 'none',
-      stroke: 'red',
-      strokeWidth: 1,
-    };
+    function randomColor(){
+      return '#' + Math.floor(Math.random()*16777215).toString(16);
+    } 
 
     return (
-      <svg width={bigRectangle.width} height={bigRectangle.height}>
-        {/* Render big rectangle */}
-        <rect x={0} y={0} width={bigRectangle.width} height={bigRectangle.height} style={bigRectangleStyle} />
+      <svg width={roof.width} height={roof.height} style={{ border: '1px solid black', padding: '10px', alignSelf: ''}}>
+        {/* Render roof rectangle */}
+        <rect x={0} y={0} width={roof.width} height={roof.height} style={roofStyle} />
 
-        {/* Render small rectangles */}
-        {data.arrangement.map((rectangle, index) => (
-          <rect key={index} x={rectangle.x} y={rectangle.y} width={rectangle.width} height={rectangle.height} style={smallRectangleStyle} />
+        {/* Render solar panel rectangles */}
+        {data.arrangement.map((solarPanel, index) => (
+          <rect key={index} x={solarPanel.x} y={solarPanel.y} width={solarPanel.width} height={solarPanel.height} style={ {
+            fill: 'none',
+            stroke: randomColor(),
+            strokeWidth: 0.2,
+        }} />
         ))}
       </svg>
     );
   };
 
   return (
-    <div>
-      <button onClick={fetchData} disabled={loading}>Fetch Data</button>
+    <div className="app-container">
+      <div className="inputs-container">
+        <InputsComponent 
+        roof={roof} 
+        setRoof={setRoof} 
+        solarPanel={solarPanel} 
+        setSolarPanel={setSolarPanel} 
+        fetchData={fetchData} 
+        loading={loading} 
+        setData = {setData}
+        />
+      </div>
+      <div className="roof-container">
+        {renderRectangles()}
+      </div>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {data && (
         <div>
-          <p>Total Small Rectangles: {data.total_small_rectangles}</p>
-          <div>
-            <p>Arrangement:</p>
-            {renderRectangles()}
-          </div>
+          <p>Total Solar Panels: {data.total_solar_panels}</p>
         </div>
       )}
     </div>
   );
 }
 
-export default CuttingStock;
+export default PanelsPlacement;

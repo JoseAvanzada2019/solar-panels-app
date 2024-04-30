@@ -1,0 +1,43 @@
+/* InputsComponent.css */
+.inputs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px;
+    max-width: 300px;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input {
+    padding: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .app-container {
+    display: flex;
+    gap: 20px;
+  }
+  
+
+  
+  .roof-container {
+    width: 200px; /* Adjust width as needed */
+    padding: 30px;
+    max-width: 300px;
+  }
